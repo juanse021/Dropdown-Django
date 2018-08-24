@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Listar</title>
+</head>
+<body>
+	<h1>Carros en stock</h1>
+	<table border="1">
+		<tr>
+			<td>Marca</td>
+			<td>Modelo</td>
+			<td>Color</td>
+			<td>Precio</td>
+			<td>Cantidad</td>
+		</tr>
+		{% for c in object_list %}
+		<tr>
+			<td>{{ c.marca }}</td>
+			<td>{{ c.modelo }}</td>
+			<td>{{ c.color }}</td>
+			<td>{{ c.precio }}</td>
+			<td>{{ c.cantidad }}</td>
+		</tr>
+		{% endfor %}
+	</table>
+</body>
+</html>

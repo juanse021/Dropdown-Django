@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Comprar Carro</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+    <h1>Comprar Carro</h1>
+
+    <form action="" method="post" id="almacenform">{% csrf_token %}
+    	<label for="marca">Marca</label>
+        <select id="marca" name="marca">
+        	<option value="default">Seleccione una marca</option>
+        	{% for m in marca %}
+            <option value="{{ m.pk }}">{{ m.nombre }}</option>
+            {% endfor %}
+        </select>
+        <label for="modelo"></label>
+
+        <select id="modelo" name="modelo">
+            <option value="">---</option>
+        </select>
+        <input type="submit" value="Enviar">      
+    </form>
+    <script>
+        var csrftoken = '{{ csrf_token }}';
+        function csrfSafeMethod(method) {
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+
+        $(document).ready(function() {
+            $('#marca').change(function() {
+                var marca_id = $(this).val();
+                console.log("Marca: " + marca_id);
+                $.ajax({
+                    url: 'json/',
+                    dataType: 'json',
+                    contentType: 'application/json; charser=utf-8', 
+                    success: function(data) {
+                        $.each(data, function(key, value) {
+                            console.log(data[marca_id]['fields']);
+                            $('#modelo').append($('<option></option>')
+                            .attr('value', key)
+                            .text(value)); 
+                        });
+                    }
+                });
+            });                       
+        });
+
+    </script>
+</body>
+</html>
