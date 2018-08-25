@@ -25,19 +25,21 @@ class AlmacenCarroUpdate(UpdateView):
 
 def comprar_carro(request):
     marca = Marca.objects.all()
-    marca_id = request.GET.get('marca_id')
+    info = request.GET.get('info')
 
-    # print(marca_id)
+    print("info {}". format(info))
+    #mar = request.GET.get('marca_id')
+    #mod = request.GET.get('modelo')
 
     context = {
         'marca': marca
     }
 
+    #print("marca:{}, modelo:{}".format(mar, mod))
+
     return render(request, 'almacen_comprar.html', context)
 
 def modelos_json(request):
-    mod = serializers.serialize("json", Modelo.objects.all())
-    return HttpResponse(mod, content_type="application/json") # Por eso deje esta
-    #return JsonResponse(mod, safe=False) #Esta linea
-    # No se por que me crea el JSON con asi: 
-    # {\"model\": \"concesionario.modelo\", \"pk\": 1, \"fields\": {\"marca\": 1, \"nombre\": \"DB9\"}}
+    modelo_json = serializers.serialize("json", Modelo.objects.all())
+    return HttpResponse(modelo_json, content_type="application/json")
+
