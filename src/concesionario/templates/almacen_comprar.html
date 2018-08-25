@@ -2,7 +2,8 @@
 <html>
 <head>
     <title>Comprar Carro</title>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="shortcut icon" href="">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
     <h1>Comprar Carro</h1>
@@ -46,11 +47,12 @@
                     success: function(data) {
                         $('#modelo').empty();
                         $('#modelo').append("<option value=''>---</option>");
-                        for (var idx = 0; idx < data.length; idx++) {
-                            if(data[idx].fields['marca'] == id_marca) {
-                                 $('#modelo').append("<option value='" + data[idx].pk + "'>" + data[idx].fields['nombre'] + "</option>");                               
+                        $.each(data, function(key, value){
+                            if(data[key].fields['marca'] == id_marca) {
+                                $('#modelo')
+                                .append("<option value='" + value['pk'] + "'>" + value['fields']['nombre'] + "</option>");
                             }
-                        }
+                        });
                     }
                 });
             });                       
