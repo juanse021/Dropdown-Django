@@ -12,16 +12,17 @@
         <label for="marca">Marca</label>
         <select id="marca" name="marca">
             <option value="default">Seleccione una marca</option>
-            {% for m in marca %}
+            {% for m in marca_all %}
             <option value="{{ m.pk }}">{{ m.nombre }}</option>
             {% endfor %}
         </select>
         <label for="modelo"></label>
         <select id="modelo" name="modelo">
-            <option value="">---</option>
+            <option value="default">Seleccione modelo</option>
         </select>
         <input type="submit" value="Enviar">      
     </form>
+
     <script>
         var csrftoken = '{{ csrf_token }}';
         function csrfSafeMethod(method) {
@@ -37,24 +38,35 @@
         });
 
         $(document).ready(function() {
+
             $('#marca').change(function() {
                 var id_marca = $(this).val();
-                $.ajax({
-                    url: 'json/',
-                    dataType: 'json',
-                    contentType: 'application/json; charser=utf-8', 
-                    success: function(data) {
+                if (id_marca != 'default') {
+                    console.log("id_marca: " + id_marca);
+                    $.get('json/', {'id_marca': id_marca}, function(data) {
                         $('#modelo').empty();
-                        $('#modelo').append("<option value=''>---</option>");
-                        $.each(data, function(key, value){
-                            if(data[key].fields['marca'] == id_marca) {
-                                $('#modelo')
-                                .append("<option value='" + value['pk'] + "'>" + value['fields']['nombre'] + "</option>");
-                            }
-                        });
-                    }
+                        $('#modelo').append("<option value=''>Seleccione modelo</option>");
+                        //console.log("Size: " + data.length);
+                        for (var i = 0; i < data.length; i++) {
+                            $('#modelo')
+                            .append("<option value='" + data[i].fields['nombre'] + "'>" + data[i].fields['nombre'] + "</option>");
+                            //console.log("data[i]: " + data[i].fields['nombre'] + "\n"); 
+                        }
+                    });
+                }
+                else {
+                    console.log("Seleccione una marca ");
+                }
+            });
+
+            $('#modelo').change(function() {
+                $('#modelo').click(function() { 
+                    var modelo_seleccionado = $('#modelo').find(":selected").val();
+                    $.get('', { 'modelo_seleccionado': modelo_seleccionado } , function(data) {
+                        console.log("Modelo: " + modelo_seleccionado + "\n");                         
+                    });
                 });
-            });                       
+            });
         });
 
     </script>

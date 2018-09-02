@@ -1,14 +1,13 @@
+import json
 from django.shortcuts import render
 from django.core import serializers
 from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
 from django.urls import reverse, reverse_lazy
 from django.contrib import messages
-from django.http import HttpResponseRedirect,HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.views.decorators.csrf import csrf_protect
 from . models import Marca, Modelo, AlmacenCarro
-from django.http import JsonResponse
-
 
 # Create your views here.
 
@@ -24,22 +23,25 @@ class AlmacenCarroUpdate(UpdateView):
 
 
 def comprar_carro(request):
-    marca = Marca.objects.all()
-    info = request.GET.get('info')
+    marca_all = Marca.objects.all()
 
-    print("info {}". format(info))
-    #mar = request.GET.get('marca_id')
-    #mod = request.GET.get('modelo')
+    mar = request.GET.get('marca', '')
+    mod = request.GET.get('modelo_seleccionado', '')
+
+    print("marca: ".format(mar))
+    print("mod: ".format(mod))
 
     context = {
-        'marca': marca
+        'marca_all': marca_all
     }
-
-    #print("marca:{}, modelo:{}".format(mar, mod))
 
     return render(request, 'almacen_comprar.html', context)
 
 def modelos_json(request):
-    modelo_json = serializers.serialize("json", Modelo.objects.all())
+    id_marca = request.GET.get('id_marca', '')
+    modelo_json = serializers.serialize("json", Modelo.objects.filter(marca=id_marca))
     return HttpResponse(modelo_json, content_type="application/json")
+    
+        
+
 
